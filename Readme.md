@@ -136,7 +136,84 @@ flowchart LR
     vmbr2 --- LabVM1
     vmbr2 --- LabVM2
 ```
+## 🔹 Paso 3 – Plantillas LXC y VMs base
+
+En Proxmox podemos usar **templates** para acelerar despliegues de contenedores (LXC) y máquinas virtuales (VMs).  
+Esto permite tener imágenes listas para clonar sin repetir instalaciones manuales.
+
+---
+
+### 🔹 1. Descargar plantillas LXC
+
+Listar y descargar templates oficiales desde Proxmox:
+
+```bash
+# Actualizar lista de plantillas disponibles
+pveam update
+
+# Listar plantillas disponibles (ejemplo Debian y Ubuntu)
+pveam available | grep -E 'debian|ubuntu'
+
+# Descargar una plantilla Debian 12 estándar al storage local
+pveam download local debian-12-standard_12.7-1_amd64.tar.zst
+
+```
+## 🔹 Seguridad básica en Proxmox VE
+
+En lugar de usar siempre `root@pam`, se recomienda crear un usuario interno de Proxmox (`@pve`) con permisos de administrador y habilitar autenticación de dos factores (2FA).
+
+Proxmox VE  @pve permite gestionar usuarios internos, roles y permisos directamente desde la interfaz web o línea de comandos , facilitando la administración segura del entorno.
 
 
+Promox VE @pam se utiliza para la autenticación del usuario root y otros usuarios del sistema, mientras que los usuarios internos de Proxmox VE (@pve) son gestionados exclusivamente por Proxmox y no tienen acceso al sistema operativo subyacente.
 
+En pocas palabras, `@pam` es para usuarios del sistema y `@pve` es para usuarios gestionados por Proxmox.
+
+Por otro lado, la autenticación de dos factores (2FA) añade una capa extra de seguridad al proceso de inicio de sesión.
+
+
+---
+
+### 🔹 1. Crear usuario interno @pve
+
+```bash
+# Crear usuario interno "frank"
+pveum user add frank@pve --password 'CambiaEsto#2025'
+
+# Asignar rol de administrador al usuario
+pveum aclmod / -user frank@pve -role Administrator
+ 
+
+```
+## 🔹 2. Habilitar TOTP (2FA)
+
+Ingresar a la interfaz web de Proxmox.
+
+Navegar a Datacenter → Permissions → Users.
+
+Seleccionar el usuario frank@pve.
+
+En la sección Two Factor, hacer clic en Add → TOTP.
+![TOTP](images/login-totp-setup.png)
+Se mostrará un código QR y una clave secreta.
+![TOTP](images/code-totp.png)
+
+Escanear el QR con una aplicación de autenticación (Google Authenticator, Authy, Bitwarden, etc.).
+
+Ingresar el código generado por la app y la contraseña del usuario.
+![TOTP](images/login-totp.png)
+
+Guardar cambios.
+
+## 🔹 3. Verificar configuración
+
+Listar usuarios y confirmar que TOTP está activo:
+```bash
+pveum user list
+
+Ejemplo de salida:
+userid      enable expire   name comment email groups  tfa
+root@pam    1      0        -    -       -     -       none
+frank@pve   1      0        -    -       -     -       totp
+```
 
