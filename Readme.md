@@ -217,3 +217,22 @@ root@pam    1      0        -    -       -     -       none
 frank@pve   1      0        -    -       -     -       totp
 ```
 
+## 🔹 Paso 4 – Automatización con Terraform
+
+El siguiente paso del laboratorio es integrar **Terraform** con Proxmox VE para gestionar la infraestructura como código (IaC).  
+Esto permite describir VMs y contenedores en archivos `.tf` y desplegarlos con un simple `terraform apply`.
+
+---
+
+### 🔹 1. Requisitos
+
+- Terraform >= 1.5  
+- Token de acceso en Proxmox (recomendado en vez de usuario/clave).  
+
+Crear token desde la GUI:  
+1. Datacenter → Permissions → API Tokens.  
+2. Seleccionar usuario (ej: `frank@pve`).  
+3. Click **Add** → definir `Token ID` (ej: `terraform`).  
+4. Copiar **Token Secret** (solo se muestra una vez).  
+
+Ejemplo de credenciales resultantes:
