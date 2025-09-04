@@ -236,3 +236,14 @@ Crear token desde la GUI:
 4. Copiar **Token Secret** (solo se muestra una vez).  
 
 Ejemplo de credenciales resultantes:
+```
+User ID: frank@pve
+Token ID: terraform
+Token Secret: XyZ123AbC456
+``` 
+
+#Taller VMs con Terraform:
+carpeta:InstallISO
+
+
+
